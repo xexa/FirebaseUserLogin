@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "55222419087",
+    "firebase_url": "https://loginexamplefirebase-4e301.firebaseio.com",
+    "project_id": "loginexamplefirebase-4e301",
+    "storage_bucket": "loginexamplefirebase-4e301.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:55222419087:android:b0102c8243764f882e3afa",
+        "android_client_info": {
+          "package_name": "com.example.loginexamplefirebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "55222419087-57pb1nq7mpubpab67n5bvqn7sco4mdp0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.loginexamplefirebase",
+            "certificate_hash": "2b077d848758446b001278987b0b6469b78c34d8"
+          }
+        },
+        {
+          "client_id": "55222419087-uu681flc6abfcdknnfd1q1ge2baj7fhf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3PqGO3ItHAt90TcYde1AdfuJSdXvlLv8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "55222419087-uu681flc6abfcdknnfd1q1ge2baj7fhf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
