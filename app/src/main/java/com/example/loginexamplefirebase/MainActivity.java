@@ -27,6 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+
     private StorageReference mStorageRef;
 
     private Button verifyBtn;
@@ -71,6 +73,14 @@ public class MainActivity extends AppCompatActivity {
         userId = mAuth.getCurrentUser().getUid();
         final FirebaseUser firebaseUser = mAuth.getCurrentUser();
         mStorageRef = FirebaseStorage.getInstance().getReference();
+
+        StorageReference profileRef = mStorageRef.child("users/"+ mAuth.getCurrentUser().getUid() + "/profile.jpg");
+        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).into(imagePic);
+            }
+        });
 
 
         if (!firebaseUser.isEmailVerified()){
@@ -133,7 +143,8 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == 1000){
             if (resultCode == RESULT_OK){
                 Uri imageUri = data.getData();
-                imagePic.setImageURI(imageUri);
+                //imagePic.setImageURI(imageUri);
+
                 uploadImageToFirebase(imageUri);
             }
         }
@@ -141,13 +152,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void uploadImageToFirebase(Uri imageUri) {
 //        upload image to FIREBASE STORAGE
-        StorageReference fileReference = mStorageRef.child("profile,jpg");
+        final StorageReference fileReference = mStorageRef.child("users/"+ mAuth.getCurrentUser().getUid() + "/profile.jpg");
 
         fileReference.putFile(imageUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(MainActivity.this, "Image loaded to firebase", Toast.LENGTH_SHORT).show();
+                        fileReference.getDownloadUrl()
+                                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                Picasso.get().load(uri).into(imagePic);
+                            }
+                        });
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
