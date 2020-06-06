@@ -24,8 +24,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ImageView imagePic;
 
-    FirebaseAuth mAuth;
-    FirebaseFirestore db;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
 
     private String userId;
 
