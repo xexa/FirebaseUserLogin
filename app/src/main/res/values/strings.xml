@@ -15,4 +15,6 @@
     <string name="your_name">Your Name</string>
     <string name="your_email_address">Your email address</string>
     <string name="your_phone_number">Your phone number</string>
+    <string name="email_not_verified">Email Not Verified</string>
+    <string name="verify_now">Verify Now</string>
 </resources>

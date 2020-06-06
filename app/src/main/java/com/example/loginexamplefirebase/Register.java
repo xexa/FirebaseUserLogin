@@ -88,6 +88,27 @@ public class Register extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()){
+
+                                    //send verification link
+
+                                    FirebaseUser firebaseUser = mAuth.getCurrentUser();
+
+                                    firebaseUser.sendEmailVerification()
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Toast.makeText(Register.this, "Verification link sent to your email", Toast.LENGTH_SHORT).show();
+
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.d(TAG, "onFailure: " + e.getLocalizedMessage());
+                                                }
+                                            });
+
+
                                     Toast.makeText(Register.this, "User Created", Toast.LENGTH_SHORT).show();
 
                                     userId = mAuth.getCurrentUser().getUid();
