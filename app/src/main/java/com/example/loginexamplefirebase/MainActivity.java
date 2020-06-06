@@ -24,6 +24,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    private StorageReference mStorageRef;
 
     private Button verifyBtn;
     private TextView messageVerify;
@@ -66,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
         userId = mAuth.getCurrentUser().getUid();
         final FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        mStorageRef = FirebaseStorage.getInstance().getReference();
 
 
         if (!firebaseUser.isEmailVerified()){
@@ -129,8 +134,28 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK){
                 Uri imageUri = data.getData();
                 imagePic.setImageURI(imageUri);
+                uploadImageToFirebase(imageUri);
             }
         }
+    }
+
+    private void uploadImageToFirebase(Uri imageUri) {
+//        upload image to FIREBASE STORAGE
+        StorageReference fileReference = mStorageRef.child("profile,jpg");
+
+        fileReference.putFile(imageUri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(MainActivity.this, "Image loaded to firebase", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(MainActivity.this, "Failed to upload image to firebase", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     public void logout(View view) {
