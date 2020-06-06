@@ -5,7 +5,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -39,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     private Button verifyBtn;
     private TextView messageVerify;
 
+    private Button changeProfileImage;
+
 
     private String userId;
 
@@ -47,14 +51,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        fullNameTextView = findViewById(R.id.full_name);
-        emailTextView = findViewById(R.id.email_text_view);
-        phoneTextView = findViewById(R.id.phone_text_view);
+        fullNameTextView = findViewById(R.id.profileName);
+        emailTextView = findViewById(R.id.profileEmail);
+        phoneTextView = findViewById(R.id.profilePhone);
 
-        verifyBtn = findViewById(R.id.verify_button);
-        messageVerify = findViewById(R.id.textView7);
+        verifyBtn = findViewById(R.id.resendCode);
+        messageVerify= findViewById(R.id.verifyMsg);
 
-        imagePic = findViewById(R.id.imageView);
+        changeProfileImage = findViewById(R.id.changeProfile);
+        imagePic = findViewById(R.id.profileImage);
 
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -100,6 +105,32 @@ public class MainActivity extends AppCompatActivity {
                 fullNameTextView.setText(documentSnapshot.getString("name"));
             }
         });
+
+        changeProfileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //open Gallery
+
+                Intent openGalleryIntent =
+                        new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+
+                startActivityForResult(openGalleryIntent, 1000);
+
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1000){
+            if (resultCode == RESULT_OK){
+                Uri imageUri = data.getData();
+                imagePic.setImageURI(imageUri);
+            }
+        }
     }
 
     public void logout(View view) {
