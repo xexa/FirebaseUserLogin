@@ -12,9 +12,20 @@
     <string name="forgot_password">Forgot Password ?</string>
     <string name="log_in_to_your_account">Log in to your account</string>
     <string name="your_profile">Your profile</string>
-    <string name="your_name">Your Name</string>
     <string name="your_email_address">Your email address</string>
     <string name="your_phone_number">Your phone number</string>
     <string name="email_not_verified">Email Not Verified</string>
     <string name="verify_now">Verify Now</string>
+    <string name="logout">Logout</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="email_not_verified_">Email Not Verified !!</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="full_name_">Full Name</string>
+    <string name="phone">Phone</string>
+    <string name="change_profile">Change Profile</string>
+    <string name="save">Save</string>
+    <string name="authenticator_app">Authenticator App</string>
+    <string name="register">Register</string>
+    <string name="already_registered_login_here">Already Registered ? Login Here</string>
+    <string name="your_name">Your name</string>
 </resources>

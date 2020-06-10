@@ -1,19 +1,18 @@
 package com.example.loginexamplefirebase;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -62,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         phoneTextView = findViewById(R.id.profilePhone);
 
         verifyBtn = findViewById(R.id.resendCode);
-        messageVerify= findViewById(R.id.verifyMsg);
+        messageVerify = findViewById(R.id.verifyMsg);
 
         changeProfileImage = findViewById(R.id.changeProfile);
         imagePic = findViewById(R.id.profileImage);
@@ -74,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         final FirebaseUser firebaseUser = mAuth.getCurrentUser();
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
-        StorageReference profileRef = mStorageRef.child("users/"+ mAuth.getCurrentUser().getUid() + "/profile.jpg");
+        StorageReference profileRef = mStorageRef.child("users/" + mAuth.getCurrentUser().getUid() + "/profile.jpg");
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -114,66 +113,33 @@ public class MainActivity extends AppCompatActivity {
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                assert documentSnapshot != null;
-                phoneTextView.setText(documentSnapshot.getString("phone"));
-                emailTextView.setText(documentSnapshot.getString("email"));
-                fullNameTextView.setText(documentSnapshot.getString("name"));
+                if (documentSnapshot.exists()) {
+                    phoneTextView.setText(documentSnapshot.getString("phone"));
+                    emailTextView.setText(documentSnapshot.getString("email"));
+                    fullNameTextView.setText(documentSnapshot.getString("name"));
+                }else {
+                    Log.d(TAG, "document snapshot doesn't exists");
+                }
             }
         });
 
         changeProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //open Gallery
-
-                Intent openGalleryIntent =
-                        new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
 
-                startActivityForResult(openGalleryIntent, 1000);
+                Intent intent = new Intent(v.getContext(), EditProfile.class);
+
+                intent.putExtra("fullName", fullNameTextView.getText().toString());
+                intent.putExtra("phone", phoneTextView.getText().toString());
+                intent.putExtra("email", emailTextView.getText().toString());
+
+                startActivity(intent);
 
             }
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == 1000){
-            if (resultCode == RESULT_OK){
-                Uri imageUri = data.getData();
-                //imagePic.setImageURI(imageUri);
-
-                uploadImageToFirebase(imageUri);
-            }
-        }
-    }
-
-    private void uploadImageToFirebase(Uri imageUri) {
-//        upload image to FIREBASE STORAGE
-        final StorageReference fileReference = mStorageRef.child("users/"+ mAuth.getCurrentUser().getUid() + "/profile.jpg");
-
-        fileReference.putFile(imageUri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        fileReference.getDownloadUrl()
-                                .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                Picasso.get().load(uri).into(imagePic);
-                            }
-                        });
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(MainActivity.this, "Failed to upload image to firebase", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
 
     public void logout(View view) {
         FirebaseAuth.getInstance().signOut();
