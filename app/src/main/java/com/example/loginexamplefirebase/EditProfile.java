@@ -166,7 +166,7 @@ public class EditProfile extends AppCompatActivity {
     }
 
     private void uploadImageToFirebase(Uri imageUri) {
-        // uplaod image to firebase storage
+        // upload image to firebase storage
         final StorageReference fileRef = mStorageRef.child("users/"+mAuth.getCurrentUser().getUid()+"/profile.jpg");
         fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
